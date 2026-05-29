@@ -16,17 +16,25 @@
       <h2>Türkçe</h2>
       <p>
         Nivra ile ilgili destek, hata bildirimi veya geri bildirim için e-posta
-        gönderebilirsin:
+        adresini kopyalayıp dilediğin mail uygulamasından yazabilirsin:
       </p>
       <p>
-        <a
+        <button
           class="button"
-          href="mailto:nozhankeklik.dev@gmail.com?subject=Nivra%20Support"
+          type="button"
+          data-copy-email
+          data-copy-label="Mail adresi kopyalandı."
         >
-          Mail gönder
-        </a>
+          Mail adresini kopyala
+        </button>
       </p>
       <p class="muted">nozhankeklik.dev@gmail.com</p>
+      <p>
+        <a href="mailto:nozhankeklik.dev@gmail.com?subject=Nivra%20Support">
+          Mail uygulamasında açmayı dene
+        </a>
+      </p>
+      <p class="status" data-copy-status></p>
       <p>
         Teknik hata bildirimi için istersen GitHub üzerinde public issue da
         açabilirsin:
@@ -41,17 +49,26 @@
 
       <h2>English</h2>
       <p>
-        For support, bug reports, or feedback about Nivra, you can send an email:
+        For support, bug reports, or feedback about Nivra, you can copy the
+        email address and send a message from any mail app:
       </p>
       <p>
-        <a
+        <button
           class="button"
-          href="mailto:nozhankeklik.dev@gmail.com?subject=Nivra%20Support"
+          type="button"
+          data-copy-email
+          data-copy-label="Email address copied."
         >
-          Send email
-        </a>
+          Copy email address
+        </button>
       </p>
       <p class="muted">nozhankeklik.dev@gmail.com</p>
+      <p>
+        <a href="mailto:nozhankeklik.dev@gmail.com?subject=Nivra%20Support">
+          Try opening your mail app
+        </a>
+      </p>
+      <p class="status" data-copy-status></p>
       <p>
         For technical bug reports, you may also open a public GitHub issue:
       </p>
@@ -69,5 +86,39 @@
         concerns, contact local emergency services or a healthcare professional.
       </p>
     </main>
+    <script>
+      const email = 'nozhankeklik.dev@gmail.com';
+      const buttons = document.querySelectorAll('[data-copy-email]');
+      const statuses = document.querySelectorAll('[data-copy-status]');
+
+      async function copyEmail(label) {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(email);
+          } else {
+            const input = document.createElement('input');
+            input.value = email;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            input.remove();
+          }
+
+          statuses.forEach((node) => {
+            node.textContent = label;
+          });
+        } catch (error) {
+          statuses.forEach((node) => {
+            node.textContent = email;
+          });
+        }
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          copyEmail(button.dataset.copyLabel || email);
+        });
+      });
+    </script>
   </body>
 </html>
